@@ -18,7 +18,7 @@ pg.display.init()
 while running == True:
    
     #kills program on top right X click
-    deltatime = clock.tick(30) / 1000
+    deltatime = clock.tick(60) / 1000
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
@@ -55,12 +55,14 @@ while running == True:
     carx += momentum * math.cos(cardirection) * deltatime
     cary += momentum * math.sin(cardirection) * deltatime
     
+    carsize = 30
 
-    leftx = 40 * math.cos(cardirection - math.radians(30)) 
-    lefty = 40 * math.sin(cardirection - math.radians(30)) 
-    rightx = 40 * math.cos(cardirection + math.radians(30)) 
-    righty = 40 * math.sin(cardirection + math.radians(30)) 
-
-    carsquare = (leftx + carx, lefty + cary), (rightx + carx, righty + cary), (carx, cary)#,(carx - leftx, cary - lefty) , (carx - rightx, cary - righty)
+    def draw_car():
+        leftx = carsize * math.cos(cardirection - math.radians(30)) 
+        lefty = carsize * math.sin(cardirection - math.radians(30)) 
+        rightx = carsize * math.cos(cardirection + math.radians(30)) 
+        righty = carsize * math.sin(cardirection + math.radians(30)) 
+        
+    carsquare = (leftx + carx, lefty + cary), (rightx + carx, righty + cary), (carx - leftx, cary - lefty) , (carx - rightx, cary - righty)
 
 pg.quit()
