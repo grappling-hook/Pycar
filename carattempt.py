@@ -2,20 +2,65 @@ import sys
 import pygame as pg
 import math
 import time
-
 pg.init()
-size = width, height = (720, 480)
-screen = pg.display.set_mode(size)
-screen.fill("skyblue")
 
-car = pg.Rect(40, 80, 5, 10)
+running = True
+size = width, height = (1080, 720)
+screen = pg.display.set_mode(size)
+clock = pg.time.Clock()
+
+carx, cary = 540, 360
+car = carcenter, cardirection = (carx, cary), math.radians(-90)
+carsquare = (carx,cary),(380,240),(0, 0)
+momentum = 0
 
 pg.display.init()
-screen.fill("skyblue")
-pg.draw.rect(car)
-pg.display.flip()
+while running == True:
+   
+    #kills program on top right X click
+    deltatime = clock.tick(30) / 1000
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            running = False
+   
+    #draws the screen
+    screen.fill("skyblue")
+    pg.draw.polygon(screen, "red", carsquare)
+    pg.display.flip()
+   
+    #keypress code
+    keys = pg.key.get_pressed()
 
-time.sleep(5)
+    #turning
+    if keys[pg.K_a]: #and abs(momentum) > 1:
+        cardirection -= math.radians(60) * deltatime
+    
+    if keys[pg.K_d]: #and abs(momentum) > 1:
+        cardirection += math.radians(60) * deltatime
+    
+    #Acceleration (gas and brakes)
+    if keys[pg.K_w]:
+        momentum += 13 
+    
+    if keys[pg.K_s]:
+        momentum -= 8 
+    
+    if keys[pg.K_SPACE]:
+        if abs(momentum) < 1:
+            momentum = 0
+        else:
+            momentum *= 0.94
+    
+    #car position code
+    carx += momentum * math.cos(cardirection) * deltatime
+    cary += momentum * math.sin(cardirection) * deltatime
+    
 
-pg.display.quit()
-SystemExit()
+    leftx = 40 * math.cos(cardirection - math.radians(30)) 
+    lefty = 40 * math.sin(cardirection - math.radians(30)) 
+    rightx = 40 * math.cos(cardirection + math.radians(30)) 
+    righty = 40 * math.sin(cardirection + math.radians(30)) 
+
+    carsquare = (leftx + carx, lefty + cary), (rightx + carx, righty + cary), (carx, cary)#,(carx - leftx, cary - lefty) , (carx - rightx, cary - righty)
+
+pg.quit()
